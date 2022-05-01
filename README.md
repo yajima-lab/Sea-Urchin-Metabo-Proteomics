@@ -15,4 +15,9 @@ Script #3 uses the timecourse proteomics dataset to generate a PCA plot, Heatmap
 
 Script #4 uses the timecourse metabolomics dataset to generate a fuzzy-c clustering analysis of the top 50 metabolites int he dataset. Pathway Analysis involved using clusters presented in fuzzy-c clustering analysis.
 
+Notes for further use:
+Add explanation of certain parts of Mfuzz code.
+Add the location of output to the corresponding supplementary figure.
+edit readme for runtimes.
+
 
