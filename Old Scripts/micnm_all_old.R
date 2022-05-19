@@ -63,6 +63,7 @@ colnames(GENEIDtoGENEPAGE) <- c("GENEPAGE","GENEID")
 mic_nm_full <- merge(mic_nm_full, NCBItoGENEID, by = "Protein.ID" )
 mic_nm_full <- merge(mic_nm_full, GENEIDtoGENEPAGE, by = "GENEID")
 
+
 #######Annotations########
 #Pathway annotation Files
 KEGGt2g <- read.csv(file = "Data/Anno/KEGGt2g.csv", row.names = 1)
@@ -154,6 +155,20 @@ colors_gg <- list('lineage' = c("Micromere" = "#F8766D",
 
 ha = HeatmapAnnotation(lineage = level, annotation_name_side = "left", col = colors_gg)
 
+######No Z-score (Preferred)
+micnm_heatmap_significant <- as.matrix(micnm_heatmap_significant)
+ht_list = Heatmap(micnm_heatmap_significant,
+                  name = "scale",
+                  top_annotation = ha,
+                  row_title = NULL,
+                  show_row_names = FALSE,
+                  cluster_columns = FALSE,
+                  clustering_distance_columns = "euclidean",
+                  clustering_method_columns = "complete")
+draw(ht_list)
+
+
+
 ######Z-score version
 png("Output/micnm_supplementary_figures/micnm_heatmap.png",width=6.25,height=4.25,units="in",res=1200)
 ht_list_zscore = Heatmap(t(scale(t(micnm_heatmap_significant))), #from complexHeatmap github
@@ -236,34 +251,19 @@ png("Output/micnm_supplementary_figures/micnm_kegg_gsea.png",width=10.25,height=
 ridgeplot(gsea.KEGG.mic) + ggtitle("KEGG: GSEA enrichment in Micromeres")
 dev.off()
 gsea.KEGG.allmic <- gsea.KEGG.mic@result
-####For MIC/NM App#####
-#######CSV File for Timecourse App (Step 1)#######
-mic_nm_global_full <- subset(mic_nm_full, select = c("Protein.ID","GSEA.Mic.m.NM"))
-sapply(2:2, function(i) {
-  mic_nm_global_full[, i] <<- as.numeric(as.character(mic_nm_global_full[, i]))
-});
 
 
 
-####PATHWAY MAPS Annotation
-annotation_matrix <- read.delim(file = "Data/Anno/annotation_matrix.txt")
-genename_to_ENTREZID <- read.delim(file = "Data/Anno/GeneExternalRef.txt", header = F)
-colnames(genename_to_ENTREZID) <- c("GENE.ID","LOC","Descrp","org.code","ENTREZ")
-genename_to_ENTREZID <- subset(genename_to_ENTREZID, select = c("GENE.ID","ENTREZ","Descrp"))
-full_annotation_matrix <- merge(annotation_matrix, genename_to_ENTREZID, by = "GENE.ID")
-
-mic_nm_global_full$Protein.ID<- gsub("\\..*","",mic_nm_global_full$Protein.ID)
-names(mic_nm_global_full)[names(mic_nm_global_full) == "Protein.ID"] <- "NCBI.ID"
 
 
-mic_nm_global_full <- merge(mic_nm_global_full, full_annotation_matrix, by = "NCBI.ID")
-mic_nm_global_full_app <- subset(mic_nm_global_full, select = c("ENTREZ","GSEA.Mic.m.NM"))
 
-#Average the expressions when the ENTREZ ID is the same:
-#Take mean of duplicate ID's
-mic_nm_global_full_app  <- aggregate(.~ENTREZ, data = mic_nm_global_full_app , FUN = mean, na.action = na.pass)
-rownames(mic_nm_global_full_app) <- mic_nm_global_full_app$ENTREZ
-mic_nm_global_full_app$ENTREZ <- NULL
 
-####Save CSV for app####
-write.csv(mic_nm_global_full_app , file = "Output/data_files_for_app/mic.m.nm.proteomics.csv")
+####Extra Stuff####
+#Example of 2D plot to show enrichment (Not used for manuscript)
+gseaGO_full <- gsea.GO.mic@result
+gseaGO_full$log10pval <- -log10(gseaGO_full$p.adjust)
+gseaGO_plot <- ggplot(gseaGO_full, aes(x = enrichmentScore, y = log10pval, color = enrichmentScore, size = setSize)) +
+  geom_point()
+
+gseaGO_plot +   geom_text_repel(aes(label = Description), size = 4)
+

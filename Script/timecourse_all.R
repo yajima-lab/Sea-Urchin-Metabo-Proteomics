@@ -84,7 +84,15 @@ timecourse_full <- completeFun(timecourse_full, c("Egg.1", "Egg.2", "Egg.3",
                                                   "Pluteus.1",  "Pluteus.2",  "Pluteus.3"))
 
 #####EXTRACT CSV FILE FROM HERE For app
-#write.csv(timecourse_full, file = "C:/Users/shaks/OneDrive/Documents/R/Proteomics Summer/App/TIMECOURSE/gsea.timecourse.proteomics.csv")
+timecourse_full_app <- subset(timecourse_full, select = c("Protein.ID","Egg.1", "Egg.2", "Egg.3",
+                                                  "2cell.1", "2cell.2", "2cell.3",
+                                                  "16cell.1", "16cell.2", "16cell.3",
+                                                  "Morula.1", "Morula.2", "Morula.3",
+                                                  "Blastula.1", "Blastula.2", "Blastula.3",
+                                                  "Gastrula.1", "Gastrula.2", "Gastrula.3",
+                                                  "Prism.1", "Prism.2", "Prism.3",
+                                                  "Pluteus.1",  "Pluteus.2",  "Pluteus.3"))
+write.csv(timecourse_full_app, file = "Output/data_files_for_app/gsea.timecourse.proteomics.csv")
 
 
 
@@ -212,6 +220,58 @@ ht_list_avg_timecourse = Heatmap(t(scale(t(as.matrix(timecourse_ht_sign_avg)))),
 draw(ht_list_avg_timecourse)
 dev.off()
 
+
+#######CSV File for Timecourse App (Step 1)#######
+####PATHWAY MAPS Annotation
+annotation_matrix <- read.delim(file = "Data/Anno/annotation_matrix.txt")
+genename_to_ENTREZID <- read.delim(file = "Data/Anno/GeneExternalRef.txt", header = F)
+colnames(genename_to_ENTREZID) <- c("GENE.ID","LOC","Descrp","org.code","ENTREZ")
+genename_to_ENTREZID <- subset(genename_to_ENTREZID, select = c("GENE.ID","ENTREZ","Descrp"))
+full_annotation_matrix <- merge(annotation_matrix, genename_to_ENTREZID, by = "GENE.ID")
+
+
+####Heatmap with all timepoints broken by pathways
+timecourse_heatmap = subset(timecourse_full, select = c("Egg.1", "Egg.2", "Egg.3",
+                                                        "2cell.1", "2cell.2", "2cell.3",
+                                                        "16cell.1", "16cell.2", "16cell.3",
+                                                        "Morula.1", "Morula.2", "Morula.3",
+                                                        "Blastula.1", "Blastula.2", "Blastula.3",
+                                                        "Gastrula.1", "Gastrula.2", "Gastrula.3",
+                                                        "Prism.1", "Prism.2", "Prism.3",
+                                                        "Pluteus.1",  "Pluteus.2","Pluteus.3", "Protein.ID", "Multiple"
+))
+timecourse_heatmap$Protein.ID<- gsub("\\..*","",timecourse_heatmap$Protein.ID)
+names(timecourse_heatmap)[names(timecourse_heatmap) == "Protein.ID"] <- "NCBI.ID"
+timecourse_pathway <- merge(timecourse_heatmap, full_annotation_matrix[,c("NCBI.ID","Descrp","KEGG.Pathway.ID")], by = "NCBI.ID")
+
+#Get csv file:
+write.csv(timecourse_pathway, file = "Output/data_files_for_app/timecourse.heatmap.csv")
+
+
+#####Timecourse Avg Version
+timecourse_global_map <- subset(timecourse_full, select = c("Protein.ID","Avg.Egg","Avg.2cell","Avg.16cell", "Avg.Morula",
+                                                            "Avg.Blastula","Avg.Gastrula","Avg.Prism","Avg.Pluteus", "Multiple"))
+sapply(2:10, function(i) {
+  timecourse_global_map[, i] <<- as.numeric(as.character(timecourse_global_map[, i]))
+});
+timecourse_global_map$Protein.ID<- gsub("\\..*","",timecourse_global_map$Protein.ID)
+names(timecourse_global_map)[names(timecourse_global_map) == "Protein.ID"] <- "NCBI.ID"
+
+
+timecourse_global_map <- merge(timecourse_global_map, full_annotation_matrix, by = "NCBI.ID")
+proteomics_timecourse_global_map <- subset(timecourse_global_map, select = c("ENTREZ","Avg.Egg","Avg.2cell","Avg.16cell", "Avg.Morula",
+                                                                             "Avg.Blastula","Avg.Gastrula","Avg.Prism","Avg.Pluteus", "Multiple"))
+
+#Average the expressions when the ENTREZ ID is the same:
+#Take mean of duplicate ID's
+proteomics_timecourse_global_full <- aggregate(.~ENTREZ, data = proteomics_timecourse_global_map, FUN = mean, na.action = na.pass)
+rownames(proteomics_timecourse_global_full) <- proteomics_timecourse_global_full$ENTREZ
+proteomics_timecourse_global_full$ENTREZ <- NULL
+
+write.csv(proteomics_timecourse_global_full, file = "Output/data_files_for_app/timecourse_proteomics_global.csv")
+
+
+
 #######Mfuzz clustering (Supplemental Figure)########
 ######With significant genes, z-score standardize
 timecourse_significant_mfuzz <- subset(timecourse_full, select = c("Protein.ID","Avg.Egg","Avg.2cell","Avg.16cell", "Avg.Morula",
@@ -268,7 +328,7 @@ m1 <- mestimate(data)
 #Dmin(data, m=m1, crange=seq(2,22,1), repeats=3, visu=TRUE)
 clust = 6
 c <- mfuzz(data,c=clust,m=m1, iter.max = 500, verbose = T)
-
+#Find initial condition (default for the mfuzz cluster)
 
 #Errors for Convergence either: 1.2458 and 1.2183 (Tests done below)
 errors <- list()
