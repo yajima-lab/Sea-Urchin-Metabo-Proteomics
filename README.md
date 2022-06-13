@@ -1,14 +1,14 @@
 # MetabolismManuscript
 R code for Metabolism Manuscript.
 
-Most important R scripts:
+##Most important R scripts:
 1.) global_metab_maps.R
 2.) micnm_all.R
 3.) timecourse_all.R
 4.) timecourse_clustering_metabolism.R
 5.) timecourse_eggscaling.R
 
-General Description of Scripts:
+##General Description of Scripts:
 Script #1 transforms all the metabolomics data (mic/nm, mic/nm inhibitors, metabolomic timecourse) and generates KEGG global maps used in the main and supplemental figures of the paper
 
 Script #2 used the mic/nm proteomics dataset to generate a PCA plot, Heatmap of Significant Proteins, and pathway analysis plots (from Over-representation analysis and GSEA)
