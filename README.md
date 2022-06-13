@@ -11,32 +11,41 @@ R code for Metabolism Manuscript.
     5.) timecourse_eggscaling.R
 
 ### General Description of Scripts:
+
 Script #1: 
 <br />
 transforms all the metabolomics data (mic/nm, mic/nm inhibitors, metabolomic timecourse) and generates KEGG global maps used in the main and supplemental figures of the paper
 <br />
+<br />
+
 Script #2: 
 <br />
 used the mic/nm proteomics dataset to generate a PCA plot, Heatmap of Significant Proteins, and pathway analysis plots (from Over-representation analysis and GSEA)
 <br />
+<br />
+
 Script #3: 
 <br />
 uses the timecourse proteomics dataset to generate a PCA plot, Heatmap of Signficant Proteins, Fuzzy-c clustering analysis of significant proteins (enzymes only and all signfiicant proteins), and Pathway Analysis of clusters presented in fuzzy-c clustering analysis.
 <br />
+<br />
+
 Script #4: 
 <br />
 uses the timecourse metabolomics dataset to generate a fuzzy-c clustering analysis of the top 50 metabolites int he dataset. Pathway Analysis involved using clusters presented in fuzzy-c clustering analysis.
 <br />
+<br />
+
 Script #5: 
 <br />
 uses the timecourse proteomics and metabolomics data and performs scaling to egg expression levels to output files to visualize on the timecourse app.
 
 #### One Important Remark about Script #3 and Script #4:
-<br />
+
 There is a possibiliy of reaching a neighboring local minimum instead of a global minimum when doing fuzzy c-means clustering. If this occurs the R script will output a self-imposed error of "You detected a local minimum, retry the calculation". Retry the calculation until this error doesn't appear. Additionally a histogram with a plot of the frequency obtaining the local vs approx. global minimum will appear.
 
 #### Important Note about Script #1:
-<br />
+
 Running the pathview (global metabolism) plots to obtain outputs in the "/Output/metab_global/Figures" folder will take approximately 2-3 hours per figure.
     
 ## Outputs
