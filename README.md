@@ -9,9 +9,7 @@ R code for Metabolism Manuscript.
 5.) timecourse_eggscaling.R
 
 ## General Description of Scripts:
-
-### Script #1 
-    transforms all the metabolomics data (mic/nm, mic/nm inhibitors, metabolomic timecourse) and generates KEGG global maps used in the main and supplemental figures of the paper
+    1.) Script #1 : transforms all the metabolomics data (mic/nm, mic/nm inhibitors, metabolomic timecourse) and generates KEGG global maps used in the main and supplemental figures of the paper
 
 ### Script #2 
     used the mic/nm proteomics dataset to generate a PCA plot, Heatmap of Significant Proteins, and pathway analysis plots (from Over-representation analysis and GSEA)
@@ -39,11 +37,14 @@ R code for Metabolism Manuscript.
     Contains csv files that the mic/nm app and timecourse app requires to run.
 
 ### metab_global
-    Figures folder contains all the outputs of the global metabolism maps using the pathview package in script #1.
-    Files folder contains ID conversion tables of various datasets and includes a name_map_all_datasets_manu.csv to show every metabolite conversion that was made using the Metaboanalyst online server + manual annotation.
+    shows 2 folders:
+        1.) Figures folder contains all the outputs of the global metabolism maps using the pathview package in script #1.
+        2.) Files folder contains ID conversion tables of various datasets and includes a name_map_all_datasets_manu.csv to show every metabolite conversion that was made using the Metaboanalyst online server + manual annotation.
 
 ### metab_timecourse_figures
-    shows 2 plots related to the metabolomics timecourse data. One plot depicts fuzzy c-means clustering into 5 clusters. These names of the 5 clusters we later manually annotated by the embryo stage in which expression was the highest. 2nd plot depicts over-representation analysis of the 5 clusters using KEGG annotations.
+    shows plots of: 
+        1.) Fuzzy c-means clustering of timecourse metabolomics data.
+        2.) Overrepresentation analysis of 5 clusters found using KEGG annotations
 
 ### micnm_supplementary_figures
     shows plots of:
