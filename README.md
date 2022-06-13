@@ -27,27 +27,26 @@ Important Note about Script #1:
     Running the pathview (global metabolism) plots to obtain outputs in the "/Output/metab_global/Figures" folder will take approximately 2-3 hours per figure.
     
 
-Outputs:
+## Outputs
 
-data_files_for_app
+### data_files_for_app
     Contains csv files that the mic/nm app and timecourse app requires to run.
 
-metab_global
+### metab_global
     Figures folder contains all the outputs of the global metabolism maps using the pathview package in script #1.
-
     Files folder contains ID conversion tables of various datasets and includes a name_map_all_datasets_manu.csv to show every metabolite conversion that was made using the Metaboanalyst online server + manual annotation.
 
-metab_timecourse_figures
+### metab_timecourse_figures
     shows 2 plots related to the metabolomics timecourse data. One plot depicts fuzzy c-means clustering into 5 clusters. These names of the 5 clusters we later manually annotated by the embryo stage in which expression was the highest. 2nd plot depicts over-representation analysis of the 5 clusters using KEGG annotations.
 
-micnm_supplementary_figures
+### micnm_supplementary_figures
     shows plots of:
         1.) PCA of the mic/nm data
         2.) Heatmap of the mic/nm data
         3.) GSEA of mic/nm data using FUNC, FUNC_ver2, GO, and KEGG annotations
         4.) Overrepresentation Analysis of mic/nm data using FUNC, FUNC_ver2, GO, and KEGG annotations
 
-timecourse_supplementary_figures
+### timecourse_supplementary_figures
     shows plots of:
         1.) PCA of timecourse data
         2.) Heatmap of timecourse data
